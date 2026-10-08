@@ -9,54 +9,52 @@ import {
 
 const contactErrorMessage = "No pudimos procesar tu solicitud. Intenta de nuevo en unos minutos.";
 
-function buildContactMessage(input: ContactFormInput) {
-  return [
-    `Website: ${input.website}`,
-    `Objetivo: ${input.growthGoal}`,
-    `Cuello de botella: ${input.bottleneck}`,
-    input.approximateRevenue ? `Ingresos aproximados: ${input.approximateRevenue}` : "",
-    input.moreAboutBrand ? `Más información: ${input.moreAboutBrand}` : "",
-  ].filter(Boolean).join("\n");
-}
-
-async function saveContactSubmission(
+async function saveContactToGoogleSheets(
   input: ContactFormInput,
-  supabaseUrl: string,
-  supabaseSecretKey: string,
+  webhookUrl: string,
+  formSecret: string,
 ) {
-  const endpoint = `${supabaseUrl.replace(/\/+$/, "")}/rest/v1/contact_submissions`;
-
   try {
-    const response = await fetch(endpoint, {
+    const response = await fetch(webhookUrl, {
       method: "POST",
       headers: {
-        apikey: supabaseSecretKey,
         "Content-Type": "application/json",
-        Prefer: "return=minimal",
       },
       body: JSON.stringify({
+        secret: formSecret,
         name: input.name,
         email: input.email,
-        company: input.brand,
-        message: buildContactMessage(input),
+        brand: input.brand,
+        website: input.website,
+        growthGoal: input.growthGoal,
+        bottleneck: input.bottleneck,
+        revenue: input.approximateRevenue || "",
+        message: input.moreAboutBrand || "",
       }),
     });
 
-    if (response.ok) return true;
-
-    let code = "unknown";
-    try {
-      const payload = await response.json() as { code?: unknown };
-      if (typeof payload.code === "string") code = payload.code;
-    } catch {
-      // The HTTP status is enough for a safe server-side diagnostic.
+    if (!response.ok) {
+      console.error("Google Sheets contact insert error", { status: response.status });
+      return false;
     }
 
-    console.error("Supabase contact insert error", { status: response.status, code });
-    return false;
+    let data: { ok?: unknown };
+    try {
+      data = await response.json() as { ok?: unknown };
+    } catch {
+      console.error("Google Sheets contact response invalid JSON");
+      return false;
+    }
+
+    if (data.ok !== true) {
+      console.error("Google Sheets contact insert was not confirmed");
+      return false;
+    }
+
+    return true;
   } catch (error) {
     console.error(
-      "Supabase contact insert request failed",
+      "Google Sheets contact insert request failed",
       error instanceof Error ? error.name : "UnknownError",
     );
     return false;
@@ -79,29 +77,29 @@ export async function POST(request: Request) {
       );
     }
 
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
+    const googleSheetsWebhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
+    const formSecret = process.env.DBN_FORM_SECRET;
     const resendApiKey = process.env.RESEND_API_KEY;
     const to = process.env.CONTACT_TO_EMAIL;
     const from = process.env.CONTACT_FROM_EMAIL;
     const isDevelopment = process.env.NODE_ENV !== "production";
 
-    if (!supabaseUrl || !supabaseSecretKey) {
+    if (!googleSheetsWebhookUrl || !formSecret) {
       if (isDevelopment) {
         return Response.json({ ok: true, developmentMode: true });
       }
 
-      console.error("Supabase contact configuration missing");
+      console.error("Google Sheets contact configuration missing");
       return Response.json({ message: contactErrorMessage }, { status: 503 });
     }
 
-    const saved = await saveContactSubmission(input, supabaseUrl, supabaseSecretKey);
+    const saved = await saveContactToGoogleSheets(input, googleSheetsWebhookUrl, formSecret);
     if (!saved) {
       return Response.json({ message: contactErrorMessage }, { status: 502 });
     }
 
     if (!resendApiKey || !to || !from) {
-      console.error("Resend contact configuration missing after Supabase insert");
+      console.error("Resend contact configuration missing after Google Sheets insert");
       return Response.json({ ok: true, developmentMode: isDevelopment, emailSent: false });
     }
 
@@ -125,12 +123,12 @@ export async function POST(request: Request) {
       });
 
       if (error) {
-        console.error("Resend contact error after Supabase insert", error.name);
+        console.error("Resend contact error after Google Sheets insert", error.name);
         return Response.json({ ok: true, emailSent: false });
       }
     } catch (error) {
       console.error(
-        "Resend contact request failed after Supabase insert",
+        "Resend contact request failed after Google Sheets insert",
         error instanceof Error ? error.name : "UnknownError",
       );
       return Response.json({ ok: true, emailSent: false });
