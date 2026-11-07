@@ -45,7 +45,7 @@ export function DemoLanding() {
         <section className="demo-landing__hero" aria-labelledby="demo-title">
           <div className="demo-landing__hero-inner container-shell">
             <div className="demo-landing__copy">
-              <p className="eyebrow">RUTA 1 / DEMO DE DBN GROWTH</p>
+              <p className="eyebrow">DEMO DE DBN GROWTH</p>
               <h1 id="demo-title">Para fundadores de suplementos que necesitan ver <span>qué mover primero.</span></h1>
               <p className="demo-landing__lede">En 15 minutos, conoce cómo DBN Growth conecta las decisiones de tu marca e-commerce de nutrición deportiva para ordenar la próxima conversación de crecimiento.</p>
               <div className="demo-landing__actions">
