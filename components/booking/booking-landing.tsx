@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { DemoBookingLink } from "@/components/booking/demo-booking-link";
+import { StrategyBookingLink } from "@/components/booking/strategy-booking-link";
 import { siteConfig } from "@/config/site";
 
 type BookingLandingProps = {
@@ -43,6 +44,43 @@ const conversationSteps = [
   ["03", "Siguiente paso", "Qué tendría sentido explorar, si existe encaje para hacerlo juntos."],
 ] as const;
 
+function getLoomEmbedUrl(value: string | undefined) {
+  if (!value) return null;
+
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" || !["loom.com", "www.loom.com"].includes(url.hostname)) return null;
+    const match = url.pathname.match(/^\/(?:share|embed)\/([a-zA-Z0-9_-]+)\/?$/);
+    return match ? `https://www.loom.com/embed/${match[1]}` : null;
+  } catch {
+    return null;
+  }
+}
+
+function LoomVideoSection() {
+  const embedUrl = getLoomEmbedUrl(process.env.NEXT_PUBLIC_DEMO_LOOM_URL);
+  if (!embedUrl) return null;
+
+  return (
+    <section className="booking-landing__video" aria-labelledby="video-title">
+      <div className="booking-landing__container">
+        <div className="booking-landing__section-heading">
+          <p className="booking-landing__eyebrow booking-landing__eyebrow--dark">LA DEMO</p>
+          <h2 id="video-title">Conoce el enfoque de DBN Growth.</h2>
+        </div>
+        <div className="booking-landing__video-frame">
+          <iframe
+            src={embedUrl}
+            title="Demo de DBN Growth"
+            allow="autoplay; fullscreen"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function BookingLanding({ mode }: BookingLandingProps) {
   const copy = pageCopy[mode];
 
@@ -71,7 +109,11 @@ export function BookingLanding({ mode }: BookingLandingProps) {
               <h1 id="booking-title">{copy.title}</h1>
               <p className="booking-landing__lede">{copy.description}</p>
               <div className="booking-landing__actions">
-                <DemoBookingLink location={copy.ctaLocation}>{copy.cta}</DemoBookingLink>
+                {mode === "demo" ? (
+                  <DemoBookingLink location={copy.ctaLocation}>{copy.cta}</DemoBookingLink>
+                ) : (
+                  <StrategyBookingLink location={copy.ctaLocation}>{copy.cta}</StrategyBookingLink>
+                )}
                 <Link className="button button--secondary" href="#conversacion">
                   Cómo funciona
                 </Link>
@@ -89,6 +131,8 @@ export function BookingLanding({ mode }: BookingLandingProps) {
             </div>
           </div>
         </section>
+
+        {mode === "demo" && <LoomVideoSection />}
 
         <section className="booking-landing__intro" id="conversacion" aria-labelledby="intro-title">
           <div className="booking-landing__container booking-landing__intro-grid">
@@ -126,9 +170,15 @@ export function BookingLanding({ mode }: BookingLandingProps) {
               <p className="booking-landing__eyebrow">DBN GROWTH PARTNER</p>
               <h2 id="close-title">Una prioridad. Las capacidades correctas. Un sistema conectado.</h2>
             </div>
-            <DemoBookingLink location={`${copy.ctaLocation}_footer`} variant="secondary">
-              {copy.cta}
-            </DemoBookingLink>
+            {mode === "demo" ? (
+              <DemoBookingLink location={`${copy.ctaLocation}_footer`} variant="secondary">
+                {copy.cta}
+              </DemoBookingLink>
+            ) : (
+              <StrategyBookingLink location={`${copy.ctaLocation}_footer`} variant="secondary">
+                {copy.cta}
+              </StrategyBookingLink>
+            )}
           </div>
         </section>
       </main>

@@ -14,13 +14,18 @@ type DemoBookingLinkProps = {
   variant?: "primary" | "secondary" | "text";
 };
 
-export function DemoBookingLink({
+type RouteBookingLinkProps = DemoBookingLinkProps & {
+  bookingUrl: string;
+};
+
+export function RouteBookingLink({
   location,
   children,
   className,
   variant = "primary",
-}: DemoBookingLinkProps) {
-  const destination = getBookingDestination(process.env.NEXT_PUBLIC_DEMO_BOOKING_URL || "");
+  bookingUrl,
+}: RouteBookingLinkProps) {
+  const destination = getBookingDestination(bookingUrl);
   const href = destination.isExternal ? destination.href : "/#contacto";
 
   return (
@@ -43,4 +48,8 @@ export function DemoBookingLink({
       )}
     </ButtonLink>
   );
+}
+
+export function DemoBookingLink(props: DemoBookingLinkProps) {
+  return <RouteBookingLink {...props} bookingUrl={process.env.NEXT_PUBLIC_DEMO_BOOKING_URL || ""} />;
 }
