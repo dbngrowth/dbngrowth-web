@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
-import { BookingLanding, getBookingLandingMetadata } from "@/components/booking/booking-landing";
+import { DemoLanding, demoLandingMetadata } from "@/components/booking/demo-landing";
 
-export const metadata: Metadata = getBookingLandingMetadata("demo");
+export const metadata: Metadata = demoLandingMetadata;
 
 export default function DemoPage() {
-  return <BookingLanding mode="demo" />;
+  return <DemoLanding />;
 }

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { DemoBookingLink } from "@/components/booking/demo-booking-link";
 import { StrategyBookingLink } from "@/components/booking/strategy-booking-link";
 import { siteConfig } from "@/config/site";
+import { getLoomEmbedUrl } from "@/lib/loom";
 
 type BookingLandingProps = {
   mode: "demo" | "strategy";
@@ -43,19 +44,6 @@ const conversationSteps = [
   ["02", "Prioridad", "Qué restricción merece atención antes de sumar más iniciativas."],
   ["03", "Siguiente paso", "Qué tendría sentido explorar, si existe encaje para hacerlo juntos."],
 ] as const;
-
-function getLoomEmbedUrl(value: string | undefined) {
-  if (!value) return null;
-
-  try {
-    const url = new URL(value);
-    if (url.protocol !== "https:" || !["loom.com", "www.loom.com"].includes(url.hostname)) return null;
-    const match = url.pathname.match(/^\/(?:share|embed)\/([a-zA-Z0-9_-]+)\/?$/);
-    return match ? `https://www.loom.com/embed/${match[1]}` : null;
-  } catch {
-    return null;
-  }
-}
 
 function LoomVideoSection() {
   const embedUrl = getLoomEmbedUrl(process.env.NEXT_PUBLIC_DEMO_LOOM_URL);
