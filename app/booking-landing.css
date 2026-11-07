@@ -1,0 +1,73 @@
+.booking-landing {
+  --booking-ink: #050713;
+  --booking-navy: #070b1a;
+  --booking-blue: #2355f5;
+  --booking-cyan: #59c8ff;
+  --booking-muted: #aeb8cc;
+  min-height: 100vh;
+  color: var(--text-dark);
+  background: var(--off-white);
+}
+
+.booking-landing__container { width: min(calc(100% - 112px), 1200px); margin-inline: auto; }
+.booking-landing__header { position: absolute; z-index: 2; top: 0; right: 0; left: 0; display: flex; align-items: center; justify-content: space-between; gap: 24px; width: min(calc(100% - 112px), 1200px); min-height: 88px; margin-inline: auto; }
+.booking-landing__header img { display: block; width: 164px; height: auto; }
+.booking-landing__back { color: #d8e0f1; font-size: .78rem; font-weight: 600; }
+.booking-landing__back:hover { color: var(--booking-cyan); }
+.booking-landing__hero { position: relative; overflow: hidden; color: var(--text-light); background: radial-gradient(circle at 87% 42%, #25215d55, transparent 35%), var(--booking-ink); }
+.booking-landing__hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, .54fr); align-items: center; width: min(calc(100% - 112px), 1200px); min-height: 690px; margin-inline: auto; padding-block: 154px 90px; }
+.booking-landing__hero-grid > div:first-child { position: relative; z-index: 1; max-width: 800px; }
+.booking-landing__eyebrow { display: flex; align-items: center; gap: 12px; margin: 0 0 26px; color: var(--booking-cyan); font-size: .63rem; font-weight: 700; letter-spacing: .17em; line-height: 1.6; }
+.booking-landing__eyebrow::before { width: 22px; height: 1px; flex: 0 0 auto; background: currentColor; content: ""; }
+.booking-landing__eyebrow--dark { color: var(--booking-blue); }
+.booking-landing h1, .booking-landing h2, .booking-landing h3 { font-family: var(--font-display); letter-spacing: -.045em; }
+.booking-landing h1 { max-width: 800px; margin: 0; font-size: clamp(3.2rem, 6vw, 5.4rem); font-weight: 600; line-height: 1.03; text-wrap: balance; }
+.booking-landing__lede { max-width: 650px; margin: 28px 0 0; color: var(--booking-muted); font-size: 1.03rem; line-height: 1.75; }
+.booking-landing__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.booking-landing__actions .button { min-width: 160px; }
+.booking-landing__note { margin: 18px 0 0; color: #8e9ab4; font-size: .73rem; }
+.booking-landing__orb { position: relative; width: min(100%, 480px); justify-self: end; opacity: .72; }
+.booking-landing__orb::after { position: absolute; inset: 18%; border-radius: 50%; background: #2355f540; content: ""; filter: blur(44px); }
+.booking-landing__orb img { position: relative; z-index: 1; display: block; width: 100%; height: auto; }
+.booking-landing__intro { background: var(--white); }
+.booking-landing__intro-grid { display: grid; grid-template-columns: .55fr 1.45fr; gap: 64px; padding-block: clamp(74px, 9vw, 126px); }
+.booking-landing__intro-grid h2, .booking-landing__section-heading h2, .booking-landing__close h2 { max-width: 760px; margin: 0; font-size: clamp(2.45rem, 4.2vw, 4rem); font-weight: 580; line-height: 1.06; }
+.booking-landing__intro-grid > div > p { max-width: 630px; margin: 24px 0 0; color: var(--text-muted-light); line-height: 1.8; }
+.booking-landing__steps { color: var(--text-light); background: var(--booking-navy); }
+.booking-landing__steps .booking-landing__container { padding-block: clamp(74px, 8vw, 112px); }
+.booking-landing__section-heading { max-width: 720px; }
+.booking-landing__step-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; padding: 0; margin: 64px 0 0; list-style: none; }
+.booking-landing__step-list li { display: grid; grid-template-columns: 28px 1fr; gap: 20px; padding-top: 22px; border-top: 1px solid #ffffff2b; }
+.booking-landing__step-list li > span { color: var(--booking-cyan); font-size: .65rem; }
+.booking-landing__step-list h3 { margin: 0; font-size: 1.55rem; font-weight: 550; }
+.booking-landing__step-list p { max-width: 260px; margin: 12px 0 0; color: var(--booking-muted); font-size: .88rem; line-height: 1.7; }
+.booking-landing__close { color: var(--text-light); background: var(--booking-ink); }
+.booking-landing__close-inner { display: flex; align-items: center; justify-content: space-between; gap: 40px; padding-block: clamp(74px, 8vw, 110px); }
+.booking-landing__close h2 { max-width: 720px; }
+.booking-landing__close .button--secondary { flex: 0 0 auto; border-color: #ffffff38; }
+.booking-landing__footer { color: #8995ad; background: var(--booking-navy); }
+.booking-landing__footer .booking-landing__container { display: flex; justify-content: space-between; gap: 24px; padding-block: 22px; border-top: 1px solid #ffffff18; font-size: .72rem; }
+.booking-landing__footer div { display: flex; gap: 20px; }
+.booking-landing__footer a:hover { color: var(--booking-cyan); }
+
+@media (max-width: 860px) {
+  .booking-landing__container, .booking-landing__header, .booking-landing__hero-grid { width: calc(100% - 48px); }
+  .booking-landing__hero-grid { display: block; min-height: 0; padding-block: 146px 76px; }
+  .booking-landing__orb { position: absolute; top: 210px; right: -240px; width: 560px; opacity: .24; }
+  .booking-landing__intro-grid { grid-template-columns: 1fr; gap: 24px; }
+  .booking-landing__step-list { grid-template-columns: 1fr; gap: 0; margin-top: 44px; }
+  .booking-landing__step-list li { padding-block: 22px; }
+}
+
+@media (max-width: 560px) {
+  .booking-landing__container, .booking-landing__header, .booking-landing__hero-grid { width: calc(100% - 40px); }
+  .booking-landing__header { min-height: 72px; }
+  .booking-landing__header img { width: 126px; }
+  .booking-landing__back { font-size: .68rem; }
+  .booking-landing h1 { font-size: clamp(2.7rem, 13vw, 3.6rem); }
+  .booking-landing__lede { font-size: .94rem; }
+  .booking-landing__actions { flex-direction: column; }
+  .booking-landing__actions .button { width: 100%; }
+  .booking-landing__close-inner, .booking-landing__footer .booking-landing__container { align-items: flex-start; flex-direction: column; }
+  .booking-landing__close .button { width: 100%; }
+}

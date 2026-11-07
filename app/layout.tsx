@@ -10,6 +10,7 @@ import "./globals.css";
 import "./sections.css";
 import "./redesign.css";
 import "./final-polish.css";
+import "./booking-landing.css";
 
 const inter = Inter({
   variable: "--font-inter",
